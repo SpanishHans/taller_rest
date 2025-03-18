@@ -1,0 +1,73 @@
+services:
+  frontend:
+    build: 
+      context: ./frontend
+      args:
+        VERSION: ${VERSION}
+    container_name: rest_front
+    ports:
+      - "${FRNT_PORT}:3000"
+    depends_on:
+      - backend
+    networks:
+      - app_net
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+      args:
+        VERSION: ${VERSION}
+    container_name: rest_back
+    ports:
+      - "${BACK_PORT}:8000"
+    environment:
+      DATABASE_URL: "postgresql+asyncpg://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}"
+    depends_on:
+      - pgadmin
+    networks:
+      - app_net
+
+  pgadmin:
+    image: dpage/pgadmin4
+    env_file: ./.env
+    container_name: rest_pgadmin
+    networks:
+      - app_net
+    ports:
+      - "${PG_PORT}:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${DB_MAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${DB_PASS}
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16
+    env_file: ./.env
+    container_name: rest_db
+    networks:
+      - app_net
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgresql:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+networks:
+  app_net:
+    driver: bridge
+    name: rest_network
+
+volumes:
+  postgresql:
+  pgadmin:

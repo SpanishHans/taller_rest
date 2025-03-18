@@ -1,0 +1,9 @@
+fastapi
+pydantic[email]
+SQLAlchemy
+uvicorn
+requests
+python-jose
+passlib[bcrypt]
+asyncpg
+pandas

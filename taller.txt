@@ -1,0 +1,9 @@
+Cordial Saludo
+
+Estudiantes 
+
+Para esta actividad deben elegir un dataset que tenga por lo menos dos tablas con información (pueden tomar la información de https://www.kaggle.com/ ) (cada estudiante debe tomar un dataset diferente), deben tomar este dataset y guardarlo en una base de datos, luego deben crear un servicio REST que permita buscar esta información, por ID o llave primria, permita agregar información, editar y por ultimo eliminar información 
+
+Recuerden que deben adjuntar el documento con las pruebas donde se debe ver el link del servicio para guardar, eliminar, editar, consultar.
+
+Deben adjuntar el código fuente del programa junto al script de la base de datos y las tablas con la información.
